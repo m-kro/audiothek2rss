@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+
+Design by TEMPLATED
+http://templated.co
+Released for free under the Creative Commons Attribution License
+
+Title      : StandardIssue
+Version    : 1.0
+Released   : 20070723
+Description: A two-column, fixed-width and lightweight template ideal for 1024x768 resolutions. Suitable for blogs and small websites.
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>{{siteTitle}}</title>
+<meta name="keywords" content="audiothek2RSS" />
+<meta name="description" content="RSS-Datein f&&uml; die ARDAudiothek" />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!-- start header -->
+<div id="header">
+    <div id="logo">
+        <h1><a href="#">audiothek2RSS<sup>1.0</sup></a></h1>
+    </div>
+    <div id="menu">
+        <ul>
+            <li><a href="#overview">&Uumlbersicht</a></li>
+            <li><a href="#list">Liste</a></li>
+            <li><a href="#source">Quelle</a></li>
+        </ul>
+    </div>
+</div>
+<!-- end header -->
+<!-- start page -->
+<div id="page">
+    <!-- start content -->
+    <div id="content">
+        {% for letter, programSets in orderedData %}
+        <div class="post">
+            <h1 class="title"><a name="{{letter}}">{{letter}}</a></h1>
+            <div class="entry">
+                {% for file, title in programSets %}
+                <a href="{{file}}">{{title}}</a>&nbsp;
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}    
+    </div>
+    <!-- end content -->
+    <!-- start sidebar -->
+    <div id="sidebar">
+        <ul>
+            <li>
+                <h2><b>Liste</b></h2>
+                <ul>
+                    {% for link, title in letters %}
+                    <li><a href="{{link}}">{{title}}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- end sidebar -->
+    <div style="clear: both;">&nbsp;</div>
+</div>
+<!-- end page -->
+<!-- start footer -->
+<div id="footer">
+    <div class="wrap">
+        <div id="fbox1" class="box2">
+            <h2><a name="source">Quelle</a></h2>
+            <p>Diese aus dem Angebot der ARDAudiothek generierte &Uuml;bersicht  und die referenzierten RSS-Dateien wurden am {{date}} mit audiothek2rss erstellt.
+            Diese Seite dient nur der Nutzung der ARDAudiotek auf auf RSS-Dateien angewiesenen Abspielger&auml;ten.
+            <br/><br/>
+            Aufruf: python audiothek2rss.py {{args}}
+            <br/><br/>
+            Der Quellcode steht unter <a href="https://www.github.com/m-kro/audiothek2rss">https://www.github.com/m-kro/audiothek2rss</a> herunterzuladen.</p>
+        </div>
+        <div id="fbox2" class="box2">
+            <h2>Verweise</h2>
+            <ul>
+                <li><a href="https://www.ardaudiothek.de">ARDAudiothek</a></li>
+                <li><a href="https://api.ardaudiothek.de/explorer/graphiql">ARDAudiothek API</a></li>
+            </ul>
+        </div>
+    </div>
+    <p id="legal">&copy; <a href="https://www.github.com/m-kro">m-kro</a>. Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.</p>
+</div>
+<!-- end footer -->
+</body>
+</html>
