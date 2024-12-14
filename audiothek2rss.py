@@ -54,10 +54,10 @@ class AudiothekProgramSet(object):
     
     def queryEpisodes(self, options):
         episodes = []
-        query = "programSet(id:%d){title,path,synopsis,sharingUrl,image{url,url1X1,},items(orderBy:PUBLISH_DATE_DESC,filter:{isPublished:{equalTo:true}}first:%d){nodes{title,summary,synopsis,sharingUrl,publicationStartDateAndTime:publishDate,url,episodeNumber,duration,image{url,url1X1,},isPublished,audios{url,downloadUrl,size,mimeType,}}}}" % (int(self.id), options.latest)
+        query = "programSet(id:%d){title,path,synopsis,sharingUrl,image{url,url1X1,},items(orderBy:PUBLISH_DATE_DESC,filter:{isPublished:{equalTo:true}}first:%d){nodes{title,summary,synopsis,sharingUrl,publicationStartDateAndTime:publishDate,url,episodeNumber,duration,image{url,url1X1,},isPublished,audios{url,downloadUrl,mimeType,}}}}" % (int(self.id), options.latest)
         data = executeQuery(query)["data"]["programSet"]
         for item in data["items"]["nodes"]:
-            episodes.append(AudiothekItem(0, item["title"], item["duration"], item["publicationStartDateAndTime"], item["audios"][0]["downloadUrl"], sharingUrl=item["sharingUrl"], description=item["summary"], synopsis=item["synopsis"], imageUrl=item["image"]["url1X1"]))
+            episodes.append(AudiothekItem(0, item["title"], item["duration"], item["publicationStartDateAndTime"], item["audios"][0]["url"], sharingUrl=item["sharingUrl"], description=item["summary"], synopsis=item["synopsis"], imageUrl=item["image"]["url1X1"]))
         self.addItems(episodes)
         self.imageUrl = data["image"]["url1X1"]
         self.audiothekPath = data["path"]
@@ -93,7 +93,6 @@ class AudiothekItem(object):
     def __init__(self, id, title, duration, dateTime, downloadUrl, sharingUrl="", description="", synopsis="", imageUrl=""):
         self.id = id
         self.title = title
-        self.valid = True
         self.dateTime = "" if dateTime is None else dateTime
         self.duration = 0 if duration is None else duration
         self.downloadUrl = downloadUrl
@@ -183,8 +182,8 @@ def getProgramSets(options, categoryIDs):
         offset += options.pagination
     return programSets
 
-def getProgramSetsByID(showIDs):
-    query = "programSetsByIds(ids:[%s]){nodes{title, id, sharingUrl, description, synopsis}}" % (",".join(['"%s"' % str(showID) for showID in showIDs]))
+def getProgramSetsByID(options):
+    query = "programSetsByIds(ids:[%s]){nodes{title, id, sharingUrl, description, synopsis}}" % (",".join(['"%s"' % str(showID) for showID in options.programID]))
     data = executeQuery(query)["data"]["programSetsByIds"]["nodes"]
     programSets = []
     for item in data:
@@ -299,8 +298,8 @@ def getOptions(args=None):
     options = argParser.parse_args(args=args)
     
     # value checks
-    if not os.path.exists(options.output):
-        sys.exit("The output directory %s does not exist" % options.output)
+    if not os.path.exists(options.outputDir):
+        sys.exit("The output directory %s does not exist" % options.outputDir)
     
     if options.programID is not None and (options.programSearch is not None or options.categoryID is not None):
         print("The --program-id argument overrides eventual restrictions by --program-search and --category-id.")
